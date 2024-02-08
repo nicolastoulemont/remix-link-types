@@ -2,16 +2,18 @@
 
 ## Disclaimer
 
-This is an incomplete program that isn't made (so far) to pass the remix tests suit. It won't cover every (many) cases.
-and can very much be improved.
+This is an incomplete program that isn't made to pass the remix tests suit, it doesn't cover every (many) cases and can very much be improved.
+It was made for demonstration purposes for a use case of writing types based on assets. It is not production ready and doesn't aim to be.
+
+I'm sure that the remix team will at some point make the Link "to" prop type safe in a much better way.
 
 ## How to use
 
-Because we can't hook (at least so far) into remix itself, we have to run the type generation outside of remix, in user land.
+Because we can't hook into remix itself, we have to run the type generation outside of remix, in user land.
 
 We do so by :
 
-1. Generating the types whenever the routes files or the remix config file change using a file watcher
+1. Generating the types whenever the routes files or the remix config file change using a file watcher that we will run in parallel of our remix dev command.
 2. Importing the generated types in our components.
 
 ### Type generation
@@ -51,6 +53,8 @@ process.on('SIGINT', function () {
 ```
 
 ### Link components
+
+The links components are simple wrapper around the Remix links, where we replace the replaceable segments in the paths with the matching values in the params prop
 
 ```tsx
 /**
