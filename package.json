@@ -1,0 +1,45 @@
+{
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "build": "tsup-node"
+  },
+  "name": "@nicolastoulemont/remix-link-types",
+  "author": "Nicolas Toulemont",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolastoulemont/remix-link-types.git"
+  },
+  "homepage": "https://github.com/nicolastoulemont/remix-link-types",
+  "keywords": [
+    "remix type safe link"
+  ],
+  "description": "Generate type based on remix file based & configuration routing",
+  "bugs": {
+    "url": "https://github.com/nicolastoulemont/remix-link-types/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.16",
+    "np": "^9.2.0",
+    "tsup": "^8.0.1",
+    "vite": "^5.0.12",
+    "vite-tsconfig-paths": "^4.3.1",
+    "vitest": "^1.2.2"
+  }
+}
