@@ -11,10 +11,14 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "vitest",
     "test:watch": "vitest watch",
-    "build": "tsup-node"
+    "build": "tsup-node",
+    "release": "np"
   },
   "name": "@nicolastoulemont/remix-link-types",
   "author": "Nicolas Toulemont",
@@ -26,12 +30,16 @@
   "keywords": [
     "remix type safe link"
   ],
-  "description": "Generate type based on remix file based & configuration routing",
+  "description": "Small package to generate types based on the remix files based and configuration routing",
   "bugs": {
     "url": "https://github.com/nicolastoulemont/remix-link-types/issues"
   },
   "engines": {
     "node": ">=18"
+  },
+  "np": {
+    "yarn": false,
+    "contents": "dist"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
