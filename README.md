@@ -7,7 +7,7 @@
 This is an incomplete program that isn't made to pass the remix tests suit, it doesn't cover every (many) cases and can very much be improved.
 It was made for demonstration purposes for a use case of writing types based on assets. It is not production ready and doesn't aim to be.
 
-I'm sure that the remix team will at some point make their navigation related components and function type safe in a much better way.
+I'm sure that the remix team will at some point make their navigation related components and functions type safe in a much better way.
 
 ## How to use
 
@@ -171,7 +171,7 @@ type TypeSafeRedirectParams = RouteConfig & { init?: number | ResponseInit }
 
 export function typeSafeRedirect({
   path,
-  // @ts-expect-error  // @ts-expect-error Typescript doesn't allow us to use the params prop without knowing the path
+  // @ts-expect-error Typescript doesn't allow us to use the params prop without knowing the path
   params,
   init,
 }: TypeSafeRedirectParams) {
