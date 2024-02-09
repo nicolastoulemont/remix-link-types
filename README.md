@@ -1,11 +1,13 @@
 # Generate types to make type safe Links with Remix
 
+![Type safe link gif](./assets/demo.gif)
+
 ## Disclaimer
 
 This is an incomplete program that isn't made to pass the remix tests suit, it doesn't cover every (many) cases and can very much be improved.
 It was made for demonstration purposes for a use case of writing types based on assets. It is not production ready and doesn't aim to be.
 
-I'm sure that the remix team will at some point make the Link "to" prop type safe in a much better way.
+I'm sure that the remix team will at some point make their navigation related components and function type safe in a much better way.
 
 ## How to use
 
@@ -17,6 +19,8 @@ We do so by :
 2. Importing the generated types in our components.
 
 ### Type generation
+
+#### Script
 
 ```ts
 // write-links-type.ts
@@ -43,7 +47,7 @@ async function writeLinkTypes() {
 }
 
 // Only need to watch the remix.config file if you define routes in it.
-const watcher = chokidar.watch(routesDirPath, 'remix.config.js')
+const watcher = chokidar.watch([routesDirPath, 'remix.config.js'])
 watcher.on('all', function (event, path) {
   writeLinkTypes()
 })
@@ -52,9 +56,37 @@ process.on('SIGINT', function () {
 })
 ```
 
+#### Output
+
+The `generateLinkTypes` function will return a string with the following union types `RawRouteConfig` and `RouteConfig`. They're both unions of the following type:
+
+```ts
+// Route: backoffice.brands.$id.tsx
+// will add the following type to the union
+type Example = {
+  path: '/backoffice/brands/{id}'
+  params: {
+    id: string
+  }
+}
+
+// Route: backoffice.brands.tsx
+// will add the following type to the union
+type Example = {
+  path: '/backoffice/brands'
+}
+```
+
+Nothing fancy really.
+
+- The `RouteConfig` excludes any potential type literal `/${string}` path from the generated union type. This type is generated when having a "catch all" route, but will also block typescript from providing actionable intellisense when present (since all other route paths can be included in that `/${string}` literal type).
+- The `RawRouteConfig` is the 1 to 1 mapping of the routes to types, including `/${string}` type literal, if needed for some reason.
+
+I recommend using the `RouteConfig` type because you probably won't want to link to your catch all route anyway.
+
 ### Link components
 
-The links components are simple wrapper around the Remix links, where we replace the replaceable segments in the paths with the matching values in the params prop
+The links components are simple wrapper around the Remix links, where we replace the replaceable segments in the paths with the matching values in the params prop.
 
 ```tsx
 /**
@@ -124,5 +156,36 @@ export function TypeSafeNavLink({
   )
 
   return <RemixNavLink to={to} {...rest} />
+}
+```
+
+### Redirect function
+
+Same logic really
+
+```ts
+import { redirect } from '@remix-run/node'
+import { RouteConfig } from '~/components/Link/link'
+
+type TypeSafeRedirectParams = RouteConfig & { init?: number | ResponseInit }
+
+export function typeSafeRedirect({
+  path,
+  // @ts-expect-error  // @ts-expect-error Typescript doesn't allow us to use the params prop without knowing the path
+  params,
+  init,
+}: TypeSafeRedirectParams) {
+  const url = path.replaceAll(/{.*}/g, (value) => {
+    if (!params) {
+      throw new Error('Missing params props')
+    }
+    const paramsValue = params[value.slice(1, -1)]
+    if (!paramsValue) {
+      throw new Error(`Missing params value: ${paramsValue}`)
+    }
+    return paramsValue
+  })
+
+  return redirect(url, init)
 }
 ```
